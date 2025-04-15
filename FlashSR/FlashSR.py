@@ -18,6 +18,7 @@ class FlashSR(DDPM):
             student_ldm_ckpt_path:str,
             sr_vocoder_ckpt_path:str,
             autoencoder_ckpt_path:str,
+            device:str,
             model_output_type:str = 'v_prediction',
             beta_schedule_type:str = 'cosine',
             **kwargs
@@ -31,7 +32,7 @@ class FlashSR(DDPM):
         self.vae = VAEWrapper(autoencoder_ckpt_path)
 
         self.sr_vocoder = SRVocoder()
-        sr_vocoder_state_dict = torch.load(sr_vocoder_ckpt_path)
+        sr_vocoder_state_dict = torch.load(sr_vocoder_ckpt_path, map_location=torch.device(device))
         self.sr_vocoder.load_state_dict(sr_vocoder_state_dict)
 
     def forward(self, 
